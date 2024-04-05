@@ -1,5 +1,6 @@
 import torch
 import torchaudio
+import numpy as np
 
 
 def safe_log(x, eps=1e-5):
@@ -19,8 +20,12 @@ def compute_mel(
     sample_rate=16000,
 ):
     """Calculate Mel Spectrogram in PyTorch."""
-    # Assuming `audio` is a 1D or 2D tensor of shape (audio_length,) or (batch_size, audio_length)
+    # Convert audio from numpy array to PyTorch tensor if necessary
+    if isinstance(audio, np.ndarray):
+        audio = torch.from_numpy(audio)
 
+    # Ensure audio is float32 (needed for stft in PyTorch)
+    audio = audio.float()
     # Compute the hop length as the frame step
     hop_length = int(fft_size * (1.0 - overlap))
 

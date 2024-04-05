@@ -32,7 +32,16 @@ class InferenceHandler:
         self.vocab = vocabularies.vocabulary_from_codec(self.codec)
         self.device = device
         self.model = model
+        self.print_model_parameters_count()
         self.model.to(self.device)
+
+    def print_model_parameters_count(self):
+        total_params = sum(p.numel() for p in self.model.parameters())
+        trainable_params = sum(
+            p.numel() for p in self.model.parameters() if p.requires_grad
+        )
+        print(f"Total Parameters: {total_params}")
+        print(f"Trainable Parameters: {trainable_params}")
 
     def _audio_to_frames(self, audio):
         """Compute spectrogram frames from audio."""

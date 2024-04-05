@@ -4,3 +4,4 @@ main.py
 results/
 /pretrained/mt3.pth
 *.pth
+/egs

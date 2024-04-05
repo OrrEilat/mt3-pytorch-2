@@ -52,19 +52,26 @@ class SpectrogramConfig:
 
 
 def split_audio(samples, spectrogram_config):
-    """Split audio into frames using PyTorch."""
-    # Assuming samples is a 1D tensor of shape (audio_length,)
+    """Split audio into frames."""
+    # Convert samples from NumPy array to PyTorch tensor if it's not already a tensor
+    if not isinstance(samples, torch.Tensor):
+        samples = torch.from_numpy(samples)
+
     frame_length = frame_step = spectrogram_config.hop_width
-    # Pad the end of the audio to make it evenly divisible
-    pad_amount = frame_length - (samples.shape[-1] % frame_length) % frame_length
-    samples_padded = torch.nn.functional.pad(samples, (0, pad_amount))
-    return samples_padded.unfold(0, frame_length, frame_step)
+    # Calculate the amount of padding needed to make samples' length a multiple of frame_length
+    pad_amount = (frame_length - samples.size(-1) % frame_length) % frame_length
+    # Pad the samples tensor
+    samples_padded = torch.nn.functional.pad(samples, (0, pad_amount), "constant", 0)
+
+    # Use unfold to create frames from the padded tensor
+    frames = samples_padded.unfold(0, frame_length, frame_step)
+    return frames
 
 
 def compute_spectrogram(samples, spectrogram_config):
     """Compute a mel spectrogram using PyTorch."""
     overlap = 1 - (spectrogram_config.hop_width / FFT_SIZE)
-    log_mel_spec = compute_logmel(
+    log_mel_spec = spectral_ops.compute_logmel(
         samples,
         lo_hz=MEL_LO_HZ,
         hi_hz=spectrogram_config.sample_rate
@@ -78,8 +85,10 @@ def compute_spectrogram(samples, spectrogram_config):
 
 
 def flatten_frames(frames):
-    """Convert frames back into a flat array of samples using PyTorch."""
-    return frames.view(-1)
+    print(f"Type of frames: {type(frames)}")
+    if isinstance(frames, torch.Tensor):
+        print(f"Shape of frames: {frames.shape}")
+    return frames.reshape(-1)
 
 
 def input_depth(spectrogram_config):

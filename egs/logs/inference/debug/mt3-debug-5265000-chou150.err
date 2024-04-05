@@ -1,0 +1,60 @@
+
+The following have been reloaded with a version change:
+  1) cuda/11.2.0 => cuda/12.1.1
+
+
+Currently Loaded Modules:
+  1) intel/17.0.1.132   3) xalt/1.1.2 (S)   5) cuda/12.1.1
+  2) impi/2017.1.132    4) rcac             6) anaconda/2020.11-py38
+
+  Where:
+   S:  Module is Sticky, requires --force to unload or purge
+
+ 
+
++ cd /home/chou150/code/mt3-pytorch-2
++ source /depot/yunglu/data/ben/venvs/MT3/bin/activate
+++ deactivate nondestructive
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
+++ '[' -n '' ']'
+++ unset VIRTUAL_ENV
+++ unset VIRTUAL_ENV_PROMPT
+++ '[' '!' nondestructive = nondestructive ']'
+++ '[' linux-gnu = cygwin ']'
+++ '[' linux-gnu = msys ']'
+++ export VIRTUAL_ENV=/depot/yunglu/data/ben/venvs/MT3
+++ VIRTUAL_ENV=/depot/yunglu/data/ben/venvs/MT3
+++ _OLD_VIRTUAL_PATH=/apps/cent7/xalt/bin:/apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/bin:/usr/local/cuda-12.1/bin:/apps/spack/gilbreth/apps/intel-mpi/2017.1.132-intel-17.0.1-p7yx74h/compilers_and_libraries_2017.1.132/linux/mpi/intel64/bin:/apps/spack/gilbreth/apps/intel-mpi/2017.1.132-intel-17.0.1-p7yx74h/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/advisor_2017.1.1.486553/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/vtune_amplifier_xe_2017.1.0.486011/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/inspector_2017.1.1.484836/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/itac/2017.1.024/intel64/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/clck/2017.1.016/bin/intel64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/compilers_and_libraries_2017.1.132/linux/bin/intel64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/compilers_and_libraries_2017.1.132/linux/mpi/intel64/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/bin:/home/chou150/.conda/envs/cent7/2020.11-py38/score2audio/bin:/home/chou150/.local/lib/pv-1.8.5:/home/chou150/.vscode-server/cli/servers/Stable-863d2581ecda6849923a2118d93a088b0745d9d6/server/bin/remote-cli:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/hpss/bin:/opt/hsi/bin:/opt/thinlinc/bin:/opt/thinlinc/sbin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/parallel_studio_xe_2017.1.043/bin
+++ PATH=/depot/yunglu/data/ben/venvs/MT3/bin:/apps/cent7/xalt/bin:/apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/bin:/usr/local/cuda-12.1/bin:/apps/spack/gilbreth/apps/intel-mpi/2017.1.132-intel-17.0.1-p7yx74h/compilers_and_libraries_2017.1.132/linux/mpi/intel64/bin:/apps/spack/gilbreth/apps/intel-mpi/2017.1.132-intel-17.0.1-p7yx74h/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/advisor_2017.1.1.486553/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/vtune_amplifier_xe_2017.1.0.486011/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/inspector_2017.1.1.484836/bin64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/itac/2017.1.024/intel64/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/clck/2017.1.016/bin/intel64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/compilers_and_libraries_2017.1.132/linux/bin/intel64:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/compilers_and_libraries_2017.1.132/linux/mpi/intel64/bin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/bin:/home/chou150/.conda/envs/cent7/2020.11-py38/score2audio/bin:/home/chou150/.local/lib/pv-1.8.5:/home/chou150/.vscode-server/cli/servers/Stable-863d2581ecda6849923a2118d93a088b0745d9d6/server/bin/remote-cli:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/hpss/bin:/opt/hsi/bin:/opt/thinlinc/bin:/opt/thinlinc/sbin:/apps/spack/gilbreth/apps/intel-parallel-studio/cluster.2017.1-intel-17.0.1-2off4ih/parallel_studio_xe_2017.1.043/bin
+++ export PATH
+++ '[' -n '' ']'
+++ '[' -z '' ']'
+++ _OLD_VIRTUAL_PS1=
+++ PS1='(MT3) '
+++ export PS1
+++ VIRTUAL_ENV_PROMPT='(MT3) '
+++ export VIRTUAL_ENV_PROMPT
+++ hash -r
++ srun python run_inference.py
+/usr/bin/uuidgen: /apps/spack/gilbreth/apps/anaconda/2020.11-py38-gcc-4.8.5-djkvkvk/lib/libuuid.so.1: no version information available (required by /usr/bin/uuidgen)
+/depot/yunglu/data/ben/venvs/MT3/lib/python3.12/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+Traceback (most recent call last):
+  File "/depot/yunglu/data/ben/code/mt3-pytorch-2/run_inference.py", line 4, in <module>
+    handler.inference(
+  File "/depot/yunglu/data/ben/code/mt3-pytorch-2/inference.py", line 120, in inference
+    inputs, frame_times = self._preprocess(audio)
+                          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/depot/yunglu/data/ben/code/mt3-pytorch-2/inference.py", line 87, in _preprocess
+    inputs, _ = self._compute_spectrograms(frames)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/depot/yunglu/data/ben/code/mt3-pytorch-2/inference.py", line 76, in _compute_spectrograms
+    i = spectrograms.compute_spectrogram(samples, self.spectrogram_config)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/depot/yunglu/data/ben/code/mt3-pytorch-2/contrib/spectrograms.py", line 74, in compute_spectrogram
+    log_mel_spec = compute_logmel(
+                   ^^^^^^^^^^^^^^
+NameError: name 'compute_logmel' is not defined
+srun: error: gilbreth-b015: task 0: Exited with exit code 1
