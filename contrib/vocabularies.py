@@ -21,7 +21,8 @@ from typing import Optional, Sequence
 from contrib import event_codec
 
 import note_seq
-import t5.data
+
+# import t5.data
 
 
 DECODED_EOS_ID = -1
@@ -36,25 +37,26 @@ DEFAULT_NUM_VELOCITY_BINS = 127
 @dataclasses.dataclass
 class VocabularyConfig:
     """Vocabulary configuration parameters."""
+
     steps_per_second: int = DEFAULT_STEPS_PER_SECOND
     max_shift_seconds: int = DEFAULT_MAX_SHIFT_SECONDS
     num_velocity_bins: int = DEFAULT_NUM_VELOCITY_BINS
 
     @property
     def abbrev_str(self):
-        s = ''
+        s = ""
         if self.steps_per_second != DEFAULT_STEPS_PER_SECOND:
-            s += 'ss%d' % self.steps_per_second
+            s += "ss%d" % self.steps_per_second
         if self.max_shift_seconds != DEFAULT_MAX_SHIFT_SECONDS:
-            s += 'ms%d' % self.max_shift_seconds
+            s += "ms%d" % self.max_shift_seconds
         if self.num_velocity_bins != DEFAULT_NUM_VELOCITY_BINS:
-            s += 'vb%d' % self.num_velocity_bins
+            s += "vb%d" % self.num_velocity_bins
         return s
 
 
 def num_velocity_bins_from_codec(codec: event_codec.Codec):
     """Get number of velocity bins from event codec."""
-    lo, hi = codec.event_type_range('velocity')
+    lo, hi = codec.event_type_range("velocity")
     return hi - lo
 
 
@@ -74,39 +76,45 @@ def bin_to_velocity(velocity_bin, num_velocity_bins):
 
 def drop_programs(tokens, codec: event_codec.Codec):
     """Drops program change events from a token sequence."""
-    min_program_id, max_program_id = codec.event_type_range('program')
+    min_program_id, max_program_id = codec.event_type_range("program")
     return tokens[(tokens < min_program_id) | (tokens > max_program_id)]
 
 
 def build_codec(vocab_config: VocabularyConfig):
     """Build event codec."""
     event_ranges = [
-        event_codec.EventRange('pitch', note_seq.MIN_MIDI_PITCH,
-                               note_seq.MAX_MIDI_PITCH),
+        event_codec.EventRange(
+            "pitch", note_seq.MIN_MIDI_PITCH, note_seq.MAX_MIDI_PITCH
+        ),
         # velocity bin 0 is used for note-off
-        event_codec.EventRange('velocity', 0, vocab_config.num_velocity_bins),
+        event_codec.EventRange("velocity", 0, vocab_config.num_velocity_bins),
         # used to indicate that a pitch is present at the beginning of a segment
         # (only has an "off" event as when using ties all pitch events until the
         # "tie" event belong to the tie section)
-        event_codec.EventRange('tie', 0, 0),
-        event_codec.EventRange('program', note_seq.MIN_MIDI_PROGRAM,
-                               note_seq.MAX_MIDI_PROGRAM),
-        event_codec.EventRange('drum', note_seq.MIN_MIDI_PITCH,
-                               note_seq.MAX_MIDI_PITCH),
+        event_codec.EventRange("tie", 0, 0),
+        event_codec.EventRange(
+            "program", note_seq.MIN_MIDI_PROGRAM, note_seq.MAX_MIDI_PROGRAM
+        ),
+        event_codec.EventRange(
+            "drum", note_seq.MIN_MIDI_PITCH, note_seq.MAX_MIDI_PITCH
+        ),
     ]
 
     return event_codec.Codec(
-        max_shift_steps=(vocab_config.steps_per_second *
-                         vocab_config.max_shift_seconds),
+        max_shift_steps=(
+            vocab_config.steps_per_second * vocab_config.max_shift_seconds
+        ),
         steps_per_second=vocab_config.steps_per_second,
-        event_ranges=event_ranges)
+        event_ranges=event_ranges,
+    )
 
 
+# DEFAULT_EXTRA_IDS = 100 source: https://github.com/google-research/text-to-text-transfer-transformer/blob/main/t5/data/utils.py
 def vocabulary_from_codec(codec: event_codec.Codec):
-    return GenericTokenVocabulary(codec.num_classes, extra_ids=t5.data.DEFAULT_EXTRA_IDS)
+    return GenericTokenVocabulary(codec.num_classes, extra_ids=100)
 
 
-class GenericTokenVocabulary():
+class GenericTokenVocabulary:
     """Vocabulary with pass-through encoding of tokens."""
 
     def __init__(self, regular_ids: int, extra_ids: int = 0):
@@ -149,8 +157,9 @@ class GenericTokenVocabulary():
         for token_id in token_ids:
             if not 0 <= token_id < self._num_regular_tokens:
                 raise ValueError(
-                    f'token_id {token_id} does not fall within valid range of '
-                    f'[0, {self._num_regular_tokens})')
+                    f"token_id {token_id} does not fall within valid range of "
+                    f"[0, {self._num_regular_tokens})"
+                )
             encoded.append(token_id + self._num_special_tokens)
 
         return encoded
@@ -169,6 +178,7 @@ class GenericTokenVocabulary():
         Returns:
           a list of token ids.
         """
+
         # convert all the extra ids  to INVALID_ID
         def _decode_id(encoded_id):
             if encoded_id == self.eos_id:
@@ -179,6 +189,7 @@ class GenericTokenVocabulary():
                 return DECODED_INVALID_ID
             else:
                 return encoded_id - self._num_special_tokens
+
         ids = [_decode_id(i) for i in ids]
         return ids
 
@@ -188,8 +199,10 @@ class GenericTokenVocabulary():
     def __eq__(self, other):
         their_extra_ids = other.extra_ids
         their_num_regular_tokens = other._num_regular_tokens
-        return (self.extra_ids == their_extra_ids and
-                self._num_regular_tokens == their_num_regular_tokens)
+        return (
+            self.extra_ids == their_extra_ids
+            and self._num_regular_tokens == their_num_regular_tokens
+        )
 
 
 def num_embeddings(vocabulary: GenericTokenVocabulary) -> int:
