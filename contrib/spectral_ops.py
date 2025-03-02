@@ -40,6 +40,7 @@ def compute_mel(
         normalized=False,
         return_complex=True,
     )
+    
 
     # Convert to magnitude spectrogram
     mag = torch.abs(spectrogram)
@@ -54,7 +55,13 @@ def compute_mel(
     )
 
     # Apply Mel filter
-    mel_spec = mel_filter(mag.pow(2).sum(-1).sqrt())
+
+    # FIX
+    # mel_spec = mel_filter(mag.pow(2).sum(-1).sqrt())
+    mel_spec = mel_filter(mag.pow(2).sqrt())
+    mel_spec = mel_spec.squeeze()
+    ##################
+
 
     return mel_spec
 

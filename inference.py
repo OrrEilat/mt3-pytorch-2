@@ -81,7 +81,12 @@ class InferenceHandler:
         outputs = []
         outputs_raws = []
         for i in inputs:
-            samples = spectrograms.flatten_frames(i)
+            
+            # FIX
+            # samples = spectrograms.flatten_frames(i)
+            samples = spectrograms.flatten_frames(i).reshape(1, -1)
+            ###########
+
             i = spectrograms.compute_spectrogram(samples, self.spectrogram_config)
             raw_i = samples
             outputs.append(i)
@@ -91,7 +96,7 @@ class InferenceHandler:
     def _preprocess(self, audio):
         frames, frame_times = self._audio_to_frames(audio)
         frames, frame_times, paddings = self._split_token_into_length(
-            frames, frame_times
+            frames, frame_times,
         )
         inputs, _ = self._compute_spectrograms(frames)
         for i, p in enumerate(paddings):
@@ -127,14 +132,26 @@ class InferenceHandler:
         else:
             invalid_programs = None
         inputs, frame_times = self._preprocess(audio)
+
+
         inputs_tensor = torch.from_numpy(inputs)
         results = []
         inputs_tensor, frame_times = self._batching(inputs_tensor, frame_times)
+
+        
+        # FIX
+        inputs_tensor[0] = inputs_tensor[0].permute(0,2,1)
+        inputs_tensor = [inputs_tensor[0][i].unsqueeze(0) for i in range(inputs_tensor[0].shape[0])]
+
+
         for batch in tqdm(inputs_tensor):
             batch = batch.to(self.device)
+
+
             result = self.model.generate(
                 inputs=batch,
-                max_length=1024,
+                # max_length=1024,
+                max_length = 256,
                 num_beams=num_beams,
                 do_sample=False,
                 length_penalty=0.4,
@@ -165,15 +182,19 @@ class InferenceHandler:
 
     def _to_event(self, predictions_np: List[np.ndarray], frame_times: np.ndarray):
         predictions = []
+        print("--> predictions_np:", len(predictions_np))
+        print("--> frame_times:", frame_times[0].shape, len(frame_times))
         for i, batch in enumerate(predictions_np):
             for j, tokens in enumerate(batch):
+                print(i, j)
                 tokens = tokens[: np.argmax(tokens == vocabularies.DECODED_EOS_ID)]
-                start_time = frame_times[i][j][0]
+                start_time = frame_times[0][i][0] ## FIX
                 start_time -= start_time % (1 / self.codec.steps_per_second)
                 predictions.append(
                     {"est_tokens": tokens, "start_time": start_time, "raw_inputs": []}
                 )
 
+        print("--> predictions:", predictions)
         encoding_spec = note_sequences.NoteEncodingWithTiesSpec
         result = metrics_utils.event_predictions_to_ns(
             predictions, codec=self.codec, encoding_spec=encoding_spec

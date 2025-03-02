@@ -428,6 +428,7 @@ class T5Stack(T5PreTrainedModel):
         encoder_decoder_position_bias = None
 
         # pos_emb
+        # +++++++++++++++++++++++++++++
         inputs_embeds = inputs_embeds + self.pos_emb(
             seq=inputs_embeds.shape[1], offset=past_key_values_length
         )
@@ -437,6 +438,7 @@ class T5Stack(T5PreTrainedModel):
         for i, (layer_module, past_key_value) in enumerate(
             zip(self.block, past_key_values)
         ):
+            print("--> past key values:", past_key_value)
             layer_head_mask = head_mask[i]
             cross_attn_layer_head_mask = cross_attn_head_mask[i]
             if output_hidden_states:
@@ -468,6 +470,8 @@ class T5Stack(T5PreTrainedModel):
                     None,  # past_key_value is always None with gradient checkpointing
                 )
             else:
+                # FIX 
+                cache_position = torch.tensor([hidden_states.shape[1] - 1], device=hidden_states.device)
                 layer_outputs = layer_module(
                     hidden_states,
                     attention_mask=extended_attention_mask,
@@ -475,11 +479,11 @@ class T5Stack(T5PreTrainedModel):
                     encoder_hidden_states=encoder_hidden_states,
                     encoder_attention_mask=encoder_extended_attention_mask,
                     encoder_decoder_position_bias=encoder_decoder_position_bias,
-                    layer_head_mask=layer_head_mask,
-                    cross_attn_layer_head_mask=cross_attn_layer_head_mask,
+                    cross_attn_layer_head_mask=cross_attn_layer_head_mask,  ### <--- FIX
                     past_key_value=past_key_value,
                     use_cache=use_cache,
                     output_attentions=output_attentions,
+                    cache_position=cache_position,
                 )
 
             # layer_outputs is a tuple with:
@@ -489,7 +493,8 @@ class T5Stack(T5PreTrainedModel):
 
             hidden_states, present_key_value_state = layer_outputs[:2]
 
-            # We share the position biases between the layers - the first layer store them
+            # We share theead_mask=layer_head_mask,
+            # cross_a position biases between the layers - the first layer store them
             # layer_outputs = hidden-states, key-value-states (self-attention position bias), (self-attention weights),
             # (cross-attention position bias), (cross-attention weights)
             position_bias = layer_outputs[2]
